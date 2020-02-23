@@ -8,7 +8,7 @@ setup(name='guidesyn',
       install_requires=[
           'scikit-learn==0.21.3',
           'scikit-image >= 0.15',
-          'pillow==4.3.0',
+          'pillow~=6.2.0',
           'torch==1.2.0',
           'torchvision==0.4.2',
           'matplotlib==3.1.1',
