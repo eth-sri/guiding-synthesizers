@@ -153,18 +153,25 @@ If you are interested in running these experiments, please reach out to [Pavol B
 
 ## Ds
 Download "UI Screenshots and View Hierarchies" from "http://interactionmining.org/rico" in guidesyn. <br>
+```
+# The actual url might change, for the latest url please refer to http://interactionmining.org/rico
+cd $RICO_DATASET
+wget https://storage.googleapis.com/crowdstf-rico-uiuc-4540/rico_dataset_v0.1/unique_uis.tar.gz
+tar xvzf unique_uis.tar.gz
+```
+
 Run 
 ```bash
 cd guidesyn
-python dataset/scripts/dudsds/data_generation.py
+python dataset/scripts/dudsds/data_generation.py --rico_dir=$RICO_DATASET --include_dsplus
 ```
 to generate the datasets containing the following steps: <br>
-1.) generate_ds_du generates the ds and du dataset by taking the views from the RICO dataset and generate negative samples by modifying views (according to shifts derived from ds+) <br>
-2.) split_test_validate_train splits the excisting ds+ dataset (generated with the program synthesizer) in test, train and validation <br>
-3.) copy_dsplus_to_dsdu_folders copies the ds+ dataset to the corresponding ds folders. <br>
+1.) generates the ds and du dataset by taking the views from the RICO dataset and generate negative samples by modifying views (according to shifts derived from ds+) <br>
+2.) (optional) copies the ds+ dataset to the corresponding ds folders to make the datasets comparable. To disable this option, remove the `--include_dsplus` flag. <br>
+
+Note that the datasets will be created in the current directory (folders `ds` and `ds-du`).
 
 The naming schema of the files is [app\_id]-[canididate\_id]\_[label].txt.
-
 For example, for `app_id=21046` the dataset contains following files:
 
 ```
@@ -186,7 +193,30 @@ Each of these files contains a list of views (one per line) in the format `[x, y
 The resulting dataset is stored in dsplus. We split the dataset in train (579 < app\_id <= 2298), test (328 < app\_id <= 579) and validation (app\_id <= 328). This can be done with splitTestValidateTrain.
 The naming schema of the files is [app\_id]-[device\_id]-[number\_of\_views]-[canididate\_id]\_[label].txt, while files named like [app\_id]-[number\_of\_views]-original.txt contain the views on the reference device.
 
-Each line in these files contains 1 view ([x, y, widht, height]).
+For example, for `app_id=168` and `number_of_views=3` the dataset contains following files:
+
+```
+Original View Locations (device with resolution 1440x2560
+168-3-original.txt
+
+Positive samples (device with resolution 1400, 2520)
+168-0-3-1_1.txt
+
+Negative samples (device with resolution 1400, 2520)
+168-0-3-0_0.txt
+168-0-3-2_0.txt
+168-0-3-3_0.txt
+168-0-3-4_0.txt
+168-0-3-5_0.txt
+168-0-3-6_0.txt
+168-0-3-7_0.txt
+168-0-3-8_0.txt
+168-0-3-9_0.txt
+168-0-3-10_0.txt
+168-0-3-11_0.txt
+```
+
+Each of these files contains a list of views (one per line) in the format `[x, y, width, height]` (same as for DS dataset).
 
 Note that generating this dataset requires the code of the InferUI synthesizer used to produce the negative examples.
 For more information, please reach out to [Pavol Bielik](https://www.sri.inf.ethz.ch/people/pavol).
@@ -196,7 +226,7 @@ For more information, please reach out to [Pavol Bielik](https://www.sri.inf.eth
 python dataset/scripts/create_ablation_dataset.py
 ```
 The ablation dataset contains the different ablation categories. Each category folder contains the corresponding sample files.
-Each line in these files contains 1 view ([x, y, widht, height]).
+Each line in these files contains 1 view ([x, y, width, height]).
 
 
 # (7) Project Structure
