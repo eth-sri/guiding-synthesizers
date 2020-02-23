@@ -1,0 +1,17 @@
+# Byte-compiled / optimized / DLL files
+__pycache__
+guidesyn.egg-info
+
+# PyCharm
+.idea
+
+# Virtual Environment
+venv
+
+# Datasets/Models
+dataset/
+saved_modelsPaper
+models.tar.gz
+
+# Cache
+joblib

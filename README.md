@@ -26,12 +26,8 @@ Activate the virtual environment.
 ```bash
 source venv/bin/activate
 ```
-Clone the git repository and move into it:
-```bash
-git clone https://github.com/eth-sri/guiding-synthesizers.git && cd guiding-synthesizers
 
-```
-Install this project in editable state
+Install this project and dependencies in editable state
 ```bash
 pip install -e .
 ```
