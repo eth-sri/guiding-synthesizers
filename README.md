@@ -28,7 +28,7 @@ source venv/bin/activate
 ```
 Clone the git repository and move into it:
 ```bash
-git clone https://gitlab.inf.ethz.ch/OU-VECHEV/neuralcegis.git && cd neuralcegis
+git clone https://github.com/eth-sri/guiding-synthesizers.git && cd guiding-synthesizers
 
 ```
 Install this project in editable state
