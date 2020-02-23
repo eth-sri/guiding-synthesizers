@@ -144,22 +144,12 @@ RNN+CNN (Ensemble): 15 (ds), 56 (ds+) <br>
 The trained models are stored in the provided model\_path. To evaluate on the test set, select the models (/epochs) you want to evalute on and copy them into another folder (removing the \_epoch\_number which is the last part of the filename). 
 Afterwards, run the oracle evaluation and specify the model\_path to the folder you just created.
 
-# (5)  Synthesis Evaluation
-The results of the end-to-end synthesis experiment are in Table 1 of the paper. The code of proram synthesiser is not published yet. Please reach out to [Pavol Bielik](https://www.sri.inf.ethz.ch/people/pavol) for more information.
+# (5) Synthesis Evaluation
+The results of the end-to-end synthesis experiment are in Table 1 of the paper. 
+To replicate the results it is necessary to run the InferUI synthesizer which is not part of this work.
+If you are interested in running these experiments, please reach out to [Pavol Bielik](https://www.sri.inf.ethz.ch/people/pavol) for more information.
 
-# (6)  How to generate datasets
-## Ds+
-The code of proram synthesiser is not published yet. It is necessary for generating the negative examples.
-Please reach out to [Pavol Bielik](https://www.sri.inf.ethz.ch/people/pavol) for more information.
-
-The resulting dataset is stored in dsplus. We split the dataset in train (579 < app\_id <= 2298), test (328 < app\_id <= 579) and validation (app\_id <= 328). This can be done with splitTestValidateTrain.
-The naming schema of the files is [app\_id]-[device\_id]-[number\_of\_views]-[canididate\_id]\_[label].txt, while files named like [app\_id]-[number\_of\_views]-original.txt contain the views on the reference device.
-
-Each line in these files contains 1 view ([x, y, widht, height]).
-
-To generate this dataset the synthesiser needs data/neural_oracle/D_S+/data_post.json (postprocessing e.g. sort by view size, filter out dublicate views).
-data_post.json contains screens rendered on 3 different device sizes.
-
+# (6) How to generate datasets
 
 ## Ds
 Download "UI Screenshots and View Hierarchies" from "http://interactionmining.org/rico" in guidesyn. <br>
@@ -173,9 +163,33 @@ to generate the datasets containing the following steps: <br>
 2.) split_test_validate_train splits the excisting ds+ dataset (generated with the program synthesizer) in test, train and validation <br>
 3.) copy_dsplus_to_dsdu_folders copies the ds+ dataset to the corresponding ds folders. <br>
 
-
 The naming schema of the files is [app\_id]-[canididate\_id]\_[label].txt.
+
+For example, for `app_id=21046` the dataset contains following files:
+
+```
+# Positive Sample
+21046_1.txt
+
+# Negative Samples
+21046_0_0.txt  
+21046_1_0.txt  
+21046_2_0.txt  
+21046_3_0.txt  
+21046_4_0.txt
+```
+
+Each of these files contains a list of views (one per line) in the format `[x, y, widht, height]`.
+
+
+## Ds+
+The resulting dataset is stored in dsplus. We split the dataset in train (579 < app\_id <= 2298), test (328 < app\_id <= 579) and validation (app\_id <= 328). This can be done with splitTestValidateTrain.
+The naming schema of the files is [app\_id]-[device\_id]-[number\_of\_views]-[canididate\_id]\_[label].txt, while files named like [app\_id]-[number\_of\_views]-original.txt contain the views on the reference device.
+
 Each line in these files contains 1 view ([x, y, widht, height]).
+
+Note that generating this dataset requires the code of the InferUI synthesizer used to produce the negative examples.
+For more information, please reach out to [Pavol Bielik](https://www.sri.inf.ethz.ch/people/pavol).
 
 ## Ablation dataset
 ```bash
