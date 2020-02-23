@@ -38,9 +38,12 @@ error_counter = 0  # how often view is generated outside of the screen
 theoreticalOutsideCounter = 0  # if bounds would be considered x, y, width, height
 
 
-def extract_views(_id):
+def extract_views(_id, rico_dir):
+    path = os.path.join(rico_dir, 'combined', str(_id) + ".json")
+    if not os.path.exists(path):
+        return None
     #rico dataset location (downloaded from http://rico.interactionmining.org)
-    with open("../combined/" + str(_id) + ".json") as f:
+    with open(path) as f:
         data = json.load(f)
         data = data['activity']
         data = data['root']
@@ -62,7 +65,6 @@ def extract_views(_id):
             if subchildren is not None:
                 for child in subchildren:
                     if child is None:
-                        print("None child", f)
                         continue
                     stack.push(child)
 
@@ -208,7 +210,7 @@ def modify_views(views, app_id, folder, max_views):
     # Experiment: more robust to changes in earlier layers
     if len(views) >= 3 and config.modify_more_than_last_view:
         number_of_modifications = random.randint(0, min(config.number_of_view_modifications_upper, len(views) - 2))
-        # range is < uppper
+        # range is < upper
         modifications = random.sample(range(1, len(views) - 1), number_of_modifications)
         trans_ids = np.random.choice(len(transformation_weights), size=number_of_modifications, replace=False,
                                      p=transformation_weights)
@@ -267,8 +269,8 @@ def preprocess_views(views, max_views):
     return views_to_be_drawn
 
 
-# generates at max numberOfSamples: (since only views are genraed with at upper_limit_views)
-def generate_ds_du(upper_limit_views, number_of_samples, ds_dir):
+# generates at max numberOfSamples: (since only views are generated with at upper_limit_views)
+def generate_ds_du(upper_limit_views, number_of_samples, ds_dir, rico_dir):
     generated = 0
     if os.path.isdir(ds_dir):
         shutil.rmtree(ds_dir)
@@ -278,7 +280,7 @@ def generate_ds_du(upper_limit_views, number_of_samples, ds_dir):
         os.makedirs(ds_dir + name)
         os.makedirs(ds_dir + "-du" + name)
 
-    for i in tqdm(range(1, number_of_samples), desc="Generating samples"):
+    for i in tqdm(range(1, number_of_samples), desc="Generating samples", ncols=120):
         # for i in range(1, config.numberOfSamples):
         if i % config.eval_rate == 0:
             folder = ds_dir + "/validate/"
@@ -287,7 +289,10 @@ def generate_ds_du(upper_limit_views, number_of_samples, ds_dir):
         else:
             folder = ds_dir + "/train/"
 
-        views = filter_duplicates(extract_views(i))
+        views = extract_views(i, rico_dir)
+        if views is None:
+            continue
+        views = filter_duplicates(views)
         if len(views) <= 2:  # and len(views) < upper_limit_views):
             continue
         views = preprocess_views(views, upper_limit_views)  # try and except

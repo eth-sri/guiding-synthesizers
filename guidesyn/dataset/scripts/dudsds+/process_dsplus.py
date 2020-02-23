@@ -121,13 +121,11 @@ def copy_dsplus_to_dsdu_folders(app_id, upper_limit, source_dir, target_dir):
     for f in foldername:
         print(f)
         file_list = [x for x in os.listdir(source_dir + f) if "original" in x]
-        print("This number is bigger than the number of apps (#number of apps x views size): ", len(file_list))
         if not os.path.isdir(target_dir):
             print("Can not copy into folder which does not exist!")
         for i, filename in enumerate(tqdm(file_list, desc="Copying " + source_dir)):
             views = read_views(source_dir + f + filename)
             # transform to views and modify
-            modifyViews(views, app_id, target_dir + f, upper_limit)
+            modify_views(views, app_id, target_dir + f, upper_limit)
             app_id = app_id + 1
-            if i % 50 == 0:
-                print(i, len(file_list))
+

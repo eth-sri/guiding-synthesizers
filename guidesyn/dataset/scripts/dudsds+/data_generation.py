@@ -10,29 +10,33 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+import argparse
+import os
 
 from generateRicoDataset import generate_ds_du
 
 from process_dsplus import split_test_validate_train, copy_dsplus_to_dsdu_folders
-import argparse
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--upper_limit_views', nargs='?', const=30, type=int, default=30)
-parser.add_argument('--number_of_samples_rico', nargs='?', const=20000, type=int, default=20000)
-parser.add_argument('--dsplus_src_dir', nargs='?', const="./dsplusPlain", default="./dsplusPlain")
-parser.add_argument('--dsplus_tar_dir', nargs='?', const="./dsplus", default="./dsplus")
-parser.add_argument('--ds_dir', nargs='?', const="./ds", default="./ds")
 
-args = parser.parse_args()
-print(args.dsplus_src_dir)
-print(args.number_of_samples_rico)
-print(args.upper_limit_views)
-print(args.dsplus_tar_dir)
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--upper_limit_views', nargs='?', const=30, type=int, default=30)
+    parser.add_argument('--number_of_samples_rico', nargs='?', const=20000, type=int, default=20000)
+    parser.add_argument('--dsplus_dir', default="./dataset/data/dsplus")
+    parser.add_argument('--include_dsplus', default=False, action='store_true', help="Adds samples from DS+ dataset to DS to make them comparable")
+    parser.add_argument('--ds_dir', nargs='?', const="./ds", default="./ds")
+    parser.add_argument('--rico_dir', required=True, type=str, help="Path to the rico dataset")
+    args = parser.parse_args()
 
-generated = generate_ds_du(args.upper_limit_views, args.number_of_samples_rico, args.ds_dir)
-print("Generated app samples: ", generated)
-(upper_test, upper_validate) = split_test_validate_train(args.upper_limit_views, args.dsplus_src_dir, 0.18, 0.12,
-                                                      args.dsplus_tar_dir)
-# (upper_test, upper_validate) = (436, 694)
-print("Spit into test, eval, train", upper_test, upper_validate)
-copy_dsplus_to_dsdu_folders(generated + 1, args.upper_limit_views, args.dsplus_tar_dir, args.ds_dir)
+    generated = generate_ds_du(args.upper_limit_views, args.number_of_samples_rico, args.ds_dir, args.rico_dir)
+
+    if not args.include_dsplus:
+        return
+    if not os.path.exists(args.dsplus_dir):
+        print('Unable to add samples from dataset DS+. Dataset not found in "{}"'.format(args.dsplus_dir))
+        return
+    copy_dsplus_to_dsdu_folders(generated + 1, args.upper_limit_views, args.dsplus_dir, args.ds_dir)
+
+
+if __name__ == "__main__":
+    main()
