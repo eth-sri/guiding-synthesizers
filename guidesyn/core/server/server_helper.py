@@ -187,7 +187,7 @@ def print_app(views):
         print(val.file_string())
 
 
-def predict_example(content, model_path, gpu_id=-1, selected_server=None, server_name="", dataset="", targetXML=None):
+def predict_example(content, model_path, gpu_id=0, selected_server=None, server_name="", dataset="", targetXML=None):
     if selected_server is None:
         selected_server = getSelectedServer(server_name, dataset)
 
