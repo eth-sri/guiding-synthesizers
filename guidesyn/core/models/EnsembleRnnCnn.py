@@ -69,7 +69,7 @@ class EnsembleRnnCnn(nn.Module):
     def forward(self, x, _input, batch_info):
         (data, lengths) = _input
         # RNN
-        view_info = pack_padded_sequence(data, lengths, batch_first=True)
+        view_info = pack_padded_sequence(data, lengths.cpu(), batch_first=True)
         _, hidden_ind_view = self.lstm2(view_info)
         hidden_concat = torch.cat(hidden_ind_view, dim=-1)
         hidden_concat = hidden_concat.permute(1, 0, 2).contiguous()

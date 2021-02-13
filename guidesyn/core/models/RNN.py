@@ -39,7 +39,7 @@ class RNN(nn.Module):
 
     def forward(self, _input, batch_info):
         (x, lengths) = _input
-        inputs = pack_padded_sequence(x, lengths, batch_first=True)
+        inputs = pack_padded_sequence(x, lengths.cpu(), batch_first=True)
         _, hidden_ind_view = self.lstm2(inputs)
         # concat tuple
         hidden_concat = torch.cat(hidden_ind_view, dim=-1)
